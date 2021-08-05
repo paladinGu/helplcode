@@ -3,12 +3,10 @@ package com.jd.helpcode;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableFeignClients
 @EnableSwagger2
 @MapperScan(basePackages = "com.jd.helpcode.mapper")
 @EnableScheduling

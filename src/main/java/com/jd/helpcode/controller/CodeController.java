@@ -1,11 +1,12 @@
 package com.jd.helpcode.controller;
 
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.jd.helpcode.service.CodeService;
+import com.jd.helpcode.vo.CodeVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 /**
  *
@@ -14,14 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/code")
 public class CodeController {
 
+    @Autowired
+    private CodeService codeService;
+
     @GetMapping("getCode")
     public void getCode(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize){
+                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 
     }
 
-    @GetMapping("putCode")
-    public void putCode(){
 
+    @PostMapping("uploadCode")
+    public void putCode(@RequestBody List<CodeVO> vo) {
+        codeService.uploadCode();
     }
 }

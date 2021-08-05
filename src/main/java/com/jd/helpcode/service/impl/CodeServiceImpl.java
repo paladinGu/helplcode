@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jd.helpcode.mapper.CodeMapper;
 import com.jd.helpcode.model.Code;
 import com.jd.helpcode.service.CodeService;
+import com.jd.helpcode.utils.RedisUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CodeServiceImpl extends ServiceImpl<CodeMapper, Code> implements CodeService {
+    @Autowired
+    private RedisUtil redisUtil;
     /**
      *  按查询次数的倒序查助力码
      * @param activityCode
@@ -35,4 +39,15 @@ public class CodeServiceImpl extends ServiceImpl<CodeMapper, Code> implements Co
         return pageResult;
     }
 
+    /**
+     * 考虑到异步会占用线程池资源，将异步内容放进redis,异步处理，提升抗并发能力
+     */
+    public void asyncAddNum(){
+
+    }
+
+    @Override
+    public void uploadCode(){
+        redisUtil.set("0","0");
+    }
 }
