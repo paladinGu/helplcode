@@ -43,7 +43,7 @@ public class CodeServiceImpl extends ServiceImpl<CodeMapper, Code> implements Co
      * 考虑到异步会占用线程池资源，将异步内容放进redis,异步处理，提升抗并发能力
      */
     public void asyncAddNum(){
-
+//        redisUtil.xadd()
     }
 
     @Override

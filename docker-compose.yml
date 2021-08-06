@@ -1,24 +1,27 @@
 services:
   web:
     build: .
-    ports:
-      - 8080:8080
+    network_mode: host
     depends_on:
       - db
       - redis
 
   redis:
     image: redis:latest
-    ports:
-      - 6379:6379
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro # 设置容器时区与宿主机保持一致
+  #    - /usr/local/docker/redis/data:/data //文件映射
+
+
+
 
   db:
     image: mysql:5.7.23
     container_name: mysql
-    network_mode : host
-    ports:
-      - 3306:3306
+    network_mode: host
     command:
+      --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_general_ci
       --explicit_defaults_for_timestamp=true

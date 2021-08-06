@@ -1,19 +1,18 @@
 package com.jd.helpcode.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.connection.stream.Record;
+import org.springframework.data.redis.connection.stream.RecordId;
+import org.springframework.data.redis.connection.stream.StreamInfo;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,15 +23,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedisUtil {
+    @Autowired
     private StringRedisTemplate redisTemplate;
-
-    public void setRedisTemplate(StringRedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    public StringRedisTemplate getRedisTemplate() {
-        return this.redisTemplate;
-    }
 
     /** -------------------key相关操作--------------------- */
 
@@ -1331,7 +1323,23 @@ public class RedisUtil {
         return redisTemplate.opsForZSet().scan(key, options);
     }
 
-    public void acknowledge(String group, Record<String,?> record) {
-        redisTemplate.opsForStream().acknowledge(group, record);
+    public Long acknowledge(String group, Record<String, ?> record) {
+        return redisTemplate.opsForStream().acknowledge(group, record);
+    }
+
+    public String createGroup(String key, String group) {
+        return redisTemplate.opsForStream().createGroup(key, group);
+    }
+
+    public StreamInfo.XInfoGroups groups(String k) {
+        return redisTemplate.opsForStream().groups(k);
+    }
+
+    public StreamInfo.XInfoConsumers consumers(String k, String s) {
+        return redisTemplate.opsForStream().consumers(k, s);
+    }
+
+    public RecordId xadd(String key, Map<?, ?> content) {
+        return redisTemplate.opsForStream().add(key, content);
     }
 }
