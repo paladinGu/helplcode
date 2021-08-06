@@ -1,5 +1,6 @@
 package com.jd.helpcode.mq;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -35,7 +36,7 @@ public class UploadStreamListener implements StreamListener<String, MapRecord<St
             if (StringUtils.isBlank(k) || StringUtils.isBlank(v)) {
                 return;
             }
-            LambdaUpdateWrapper<Code> wrapper = Wrappers.lambdaUpdate();
+            LambdaQueryWrapper<Code> wrapper = Wrappers.lambdaQuery();
             Code code = Code.builder().activityCode(k).shareCode(v).build();
             wrapper.eq(Code::getActivityCode, k);
             wrapper.eq(Code::getShareCode, v);

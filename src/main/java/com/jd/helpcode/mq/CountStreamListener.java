@@ -1,19 +1,18 @@
 package com.jd.helpcode.mq;
 
-import com.jd.helpcode.common.Constant;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.jd.helpcode.mapper.CodeMapper;
 import com.jd.helpcode.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.stream.MapRecord;
-import org.springframework.data.redis.connection.stream.RecordId;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 /**
- * @author gwl
- * @Type StreamListener.java
- * @Desc
- * @date 2021/8/5 17:15
+ *
  */
 @Slf4j
 @Component
@@ -21,16 +20,19 @@ public class CountStreamListener implements StreamListener<String, MapRecord<Str
     @Autowired
     RedisUtil redisUtil;
 
+    @Resource
+    private CodeMapper codeMapper;
 
     @Override
-    public void onMessage(MapRecord<String,String, String> entries) {
+    public void onMessage(MapRecord<String, String, String> record) {
 
-        // 消息ID
-        RecordId messageId = entries.getId();
+        record.getValue().forEach((k, v) -> {
+            if (StringUtils.isBlank(k) || StringUtils.isBlank(v)) {
+                return;
+            }
+            codeMapper.addNum(k, v);
+        });
 
-        log.info("StreamMessageListener  stream message。messageId={}", messageId);
-        // 通过RedisTemplate手动确认消息
-        redisUtil.acknowledge(Constant.ADD_NUM_QUEUE, entries);
 
     }
 
