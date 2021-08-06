@@ -47,7 +47,6 @@ public class UploadStreamListener implements StreamListener<String, MapRecord<St
 
         });
 
-        log.info("StreamMessageListener  stream  ={}", record);
 
 
     }

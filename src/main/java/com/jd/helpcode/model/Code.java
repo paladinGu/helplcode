@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.gitee.sunchenbin.mybatis.actable.annotation.Column;
+import com.gitee.sunchenbin.mybatis.actable.annotation.Index;
 import com.gitee.sunchenbin.mybatis.actable.annotation.TableCharset;
 import com.gitee.sunchenbin.mybatis.actable.annotation.TableEngine;
 import com.gitee.sunchenbin.mybatis.actable.constants.MySqlCharsetConstant;
@@ -31,6 +32,7 @@ public class Code {
     private Long id;
 
     @Column(length = 80, comment = "活动code")
+    @Index(value = "index_a_s",columns = {"activity_code","share_code"})
     private String activityCode;
 
 
