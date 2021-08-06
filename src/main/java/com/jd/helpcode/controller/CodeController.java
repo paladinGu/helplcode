@@ -11,6 +11,7 @@ import java.util.List;
 /**
  *
  */
+
 @RestController
 @RequestMapping("/code")
 public class CodeController {
@@ -26,7 +27,7 @@ public class CodeController {
 
 
     @PostMapping("uploadCode")
-    public void putCode(@RequestBody List<CodeVO> vo) {
-        codeService.uploadCode();
+    public void putCode(@RequestBody List<CodeVO> vos) {
+        codeService.uploadCode(vos);
     }
 }

@@ -1,11 +1,14 @@
 package com.jd.helpcode.mq;
 
-import com.jd.helpcode.common.Constant;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.jd.helpcode.model.Code;
+import com.jd.helpcode.service.CodeService;
 import com.jd.helpcode.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.stream.MapRecord;
-import org.springframework.data.redis.connection.stream.RecordId;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
 
@@ -21,17 +24,30 @@ public class UploadStreamListener implements StreamListener<String, MapRecord<St
     @Autowired
     RedisUtil redisUtil;
 
+    @Autowired
+    private CodeService codeService;
 
     @Override
-    public void onMessage(MapRecord<String,String, String> entries) {
-
-        // 消息ID
-        RecordId messageId = entries.getId();
+    public void onMessage(MapRecord<String, String, String> record) {
 
 
-        log.info("StreamMessageListener  stream message。messageId={}", messageId);
-        // 通过RedisTemplate手动确认消息
-        redisUtil.acknowledge(Constant.ADD_NUM_QUEUE, entries);
+        record.getValue().forEach((k, v) -> {
+            if (StringUtils.isBlank(k) || StringUtils.isBlank(v)) {
+                return;
+            }
+            LambdaUpdateWrapper<Code> wrapper = Wrappers.lambdaUpdate();
+            Code code = Code.builder().activityCode(k).shareCode(v).build();
+            wrapper.eq(Code::getActivityCode, k);
+            wrapper.eq(Code::getShareCode, v);
+            if (codeService.list(wrapper).size() == 0) {
+                codeService.save(code);
+            }
+
+
+        });
+
+        log.info("StreamMessageListener  stream  ={}", record);
+
 
     }
 

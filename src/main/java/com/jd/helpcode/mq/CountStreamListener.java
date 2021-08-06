@@ -28,7 +28,6 @@ public class CountStreamListener implements StreamListener<String, MapRecord<Str
         // 消息ID
         RecordId messageId = entries.getId();
 
-
         log.info("StreamMessageListener  stream message。messageId={}", messageId);
         // 通过RedisTemplate手动确认消息
         redisUtil.acknowledge(Constant.ADD_NUM_QUEUE, entries);

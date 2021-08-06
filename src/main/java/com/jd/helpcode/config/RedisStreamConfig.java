@@ -76,7 +76,6 @@ public class RedisStreamConfig implements DisposableBean {
         /**
          * 这里必须先判空，重复创建组会报错，获取不存在的key的组也会报错
          * 所以需要先判断是否存在key，再判断是否存在组
-         * 我这里只有一个组，如果需要创建多个组的话则需要改下逻辑
          */
          /**
          * 如果没有消费者组，创建消费者组

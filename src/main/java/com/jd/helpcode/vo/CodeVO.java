@@ -18,7 +18,7 @@ public class CodeVO {
 
 
     @ApiModelProperty("助力码")
-    private String code;
+    private String shareCode;
 
 
 }

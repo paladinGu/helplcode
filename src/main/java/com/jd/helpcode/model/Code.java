@@ -35,9 +35,9 @@ public class Code {
 
 
     @Column(length = 200, comment = "助力码")
-    private String code;
+    private String shareCode;
 
-    @Column(comment = "查询次数")
+    @Column(comment = "查询次数",defaultValue = "0")
     private Integer queryNum;
 
     @Column
