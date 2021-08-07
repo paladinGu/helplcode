@@ -3,9 +3,13 @@ package com.jd.helpcode.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +17,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -35,6 +36,9 @@ public class MybatisTableConfig {
 
     @Value("${spring.datasource.password}")
     private String password;
+
+    @Autowired
+    private MybatisPlusInterceptor mybatisPlusInterceptor;
 
     @Bean
     public PropertiesFactoryBean configProperties() throws Exception {
@@ -67,6 +71,8 @@ public class MybatisTableConfig {
 
     @Bean
     public SqlSessionFactoryBean sqlSessionFactory() throws Exception {
+        Interceptor[] plugins = {mybatisPlusInterceptor};
+
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource());
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
@@ -78,7 +84,7 @@ public class MybatisTableConfig {
         configuration.setJdbcTypeForNull(JdbcType.NULL);
         sqlSessionFactoryBean.setConfiguration(configuration);
         sqlSessionFactoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
-
+        sqlSessionFactoryBean.setPlugins(plugins);
         return sqlSessionFactoryBean;
     }
 
