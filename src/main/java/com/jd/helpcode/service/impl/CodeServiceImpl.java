@@ -73,8 +73,8 @@ public class CodeServiceImpl extends ServiceImpl<CodeMapper, Code> implements Co
      * 备份表
      */
     @Scheduled(cron = "58 11 0 * * *")
-    @PostConstruct
-    public void backTable(){
+    public void backTable() throws InterruptedException {
+
         this.baseMapper.creatBack();
 
     }
